@@ -105,7 +105,7 @@ export function groupByDay(events, tz) {
   for (const e of events) {
     const { start, end } = parse(e);
     const key = `${hmInTZ(new Date(start), tz)}–${hmInTZ(new Date(end), tz)}`;
-    if (!map.has(key)) map.set(key, { slot: key, start, items: [] });
+    if (!map.has(key)) map.set(key, { slot: key, start, end, items: [] });
     map.get(key).items.push(e);
   }
   return [...map.values()].sort((a, b) => a.start - b.start);

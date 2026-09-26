@@ -1,7 +1,7 @@
 import {
   API_URL, LIMA, meta, intensity, isHighlight,
   ymdInTZ, hmInTZ, eventsForDay, groupByDay, isLive, nextEvent, monthMatrix,
-} from "./logic.js?v=7";
+} from "./logic.js?v=8";
 
 const $ = (s) => document.querySelector(s);
 
@@ -94,15 +94,22 @@ function renderDay() {
   if (!evs.length) { list.innerHTML = '<div class="empty">Sin eventos este día.</div>'; return; }
 
   for (const g of groupByDay(evs, tz)) {
-    list.insertAdjacentHTML("beforeend", `<div class="slot">${g.slot}</div>`);
+    const gs = new Date(g.start), ge = new Date(g.end);
+    const cross = ymdInTZ(gs, tz) !== ymdInTZ(ge, tz);
+    const inProgress = now >= gs && now <= ge;
+    list.insertAdjacentHTML("beforeend",
+      `<div class="franja">
+         <span class="a">${hmInTZ(gs, tz)}</span><span class="arw">→</span><span class="b">${hmInTZ(ge, tz)}</span>
+         ${cross ? '<span class="xday" title="termina al día siguiente">+1</span>' : ""}
+         ${inProgress ? '<span class="pill">en curso</span>' : ""}
+       </div>`);
     for (const e of g.items) {
       const mm = meta(e.eventIndex), bd = intensity(e), live = isLive(e, now), hl = isHighlight(e);
       list.insertAdjacentHTML("beforeend",
         `<div class="ev">
-           <span class="t">${hmInTZ(new Date(Date.parse(e.startTime)), tz)}–${hmInTZ(new Date(Date.parse(e.endTime)), tz)}</span>
            <span class="bar" style="background:${mm.color}"></span>
            <span class="nm">${hl ? '<span class="hstar">★</span> ' : ""}${mm.name}${live ? ' <span class="live">• en vivo</span>' : ""}</span>
-           ${bd ? `<span class="badge" style="background:${mm.color}1f;color:${mm.color}">${bd}</span>` : ""}
+           ${bd ? `<span class="badge" style="background:${mm.color}2e;color:#191817;border:1px solid ${mm.color}66">${bd}</span>` : ""}
          </div>`);
     }
   }
