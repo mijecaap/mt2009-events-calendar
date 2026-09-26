@@ -1,16 +1,30 @@
 import {
   API_URL, LIMA, ARG, meta, intensity,
   ymdInTZ, hmInTZ, eventsForDay, groupByDay, isLive, nextEvent, monthMatrix,
-} from "./logic.js";
+} from "./logic.js?v=5";
 
 const $ = (s) => document.querySelector(s);
 let EV = [], tz = LIMA, sel = null, y, m;
 
+// Intenta el proxy same-origin (/api, evita CORS y bloqueos de WebView) y si no,
+// cae directo al API. Así funciona en cualquier navegador y en local.
+async function fetchEvents() {
+  let lastErr;
+  for (const url of ["/api/events/list", API_URL]) {
+    try {
+      const r = await fetch(url);
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      const j = await r.json();
+      if (!Array.isArray(j.data)) throw new Error("formato inesperado");
+      return j.data.filter(e => e.enabled !== false);
+    } catch (e) { lastErr = e; }
+  }
+  throw lastErr || new Error("sin datos");
+}
+
 async function boot() {
   try {
-    const r = await fetch(API_URL);
-    if (!r.ok) throw new Error("HTTP " + r.status);
-    EV = (await r.json()).data.filter(e => e.enabled !== false);
+    EV = await fetchEvents();
   } catch (err) {
     $("#list").innerHTML = '<div class="empty">No se pudieron cargar los eventos. Reintenta en un momento.</div>';
     return;
