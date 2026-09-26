@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Eventos MT2009 — Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eceef2;--panel:#fff;--line:#e0e3e9;--line2:#eef0f4;--ink:#14181f;--mut:#5f6672;--dim:#98a0ad;--sel:#14181f;--live:#0f8a52}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:14px/1.45 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.mono{font-family:'JetBrains Mono',monospace;font-variant-numeric:tabular-nums}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 18px;background:var(--panel);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5;flex-wrap:wrap}
+.top h1{margin:0;font-size:14px;font-weight:600;letter-spacing:-.1px}
+.top .u{color:var(--dim);font-weight:400;margin-left:6px}
+.ctl{display:flex;gap:8px;align-items:center}
+.tz{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden}
+.tz button{border:0;background:var(--panel);color:var(--mut);font:inherit;font-size:12px;padding:5px 11px;cursor:pointer}
+.tz button.on{background:var(--sel);color:#fff}
+.ic{border:1px solid var(--line);background:var(--panel);border-radius:7px;width:30px;height:30px;cursor:pointer;color:var(--mut)}
+.wrap{max-width:1120px;margin:0 auto;padding:16px}
+.grid{display:grid;grid-template-columns:240px 1fr;gap:16px}
+@media(max-width:760px){.grid{grid-template-columns:1fr}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.mh{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--line2)}
+.mh h2{margin:0;font-size:12px;font-weight:600;text-transform:capitalize}
+.mh div button{border:1px solid var(--line);background:var(--panel);border-radius:6px;width:24px;height:24px;cursor:pointer;color:var(--mut)}
+.mg{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;padding:8px}
+.mg .dw{font-size:10px;color:var(--dim);text-align:center;padding:3px 0;font-weight:600}
+.mg .c{border:0;background:none;font:inherit;font-size:12px;color:var(--ink);aspect-ratio:1;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative}
+.mg .c.out{color:#c3c9d3}
+.mg .c:hover{background:#f3f5f8}
+.mg .c.today{box-shadow:inset 0 0 0 1.5px var(--ink);font-weight:600}
+.mg .c.sel{background:var(--sel);color:#fff}
+.mg .c.has::after{content:"";position:absolute;bottom:3px;width:3px;height:3px;border-radius:50%;background:#14181f}
+.legend{display:flex;flex-wrap:wrap;gap:6px 10px;padding:10px 12px;border-top:1px solid var(--line2)}
+.legend span{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--mut)}
+.legend i{width:8px;height:8px;border-radius:2px}
+.thead{display:grid;grid-template-columns:104px 1fr 96px 84px;gap:12px;padding:9px 14px;border-bottom:1px solid var(--line);color:var(--dim);font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;font-weight:600}
+.dhead{display:flex;align-items:baseline;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line2)}
+.dhead h2{margin:0;font-size:14px;font-weight:600;text-transform:capitalize}
+.dhead span{color:var(--dim);font-size:12px}
+.dhead .live{color:var(--live);font-size:11px;font-weight:700;margin-left:auto}
+.group{background:#f7f8fa;border-bottom:1px solid var(--line2);padding:6px 14px;font-size:10.5px;color:var(--mut);font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+.tr{display:grid;grid-template-columns:104px 1fr 96px 84px;gap:12px;align-items:center;padding:9px 14px;border-bottom:1px solid var(--line2)}
+.tr:last-child{border-bottom:0}
+.tr:hover{background:#f7f9fc}
+.tr .hr{color:var(--mut);font-size:12px}
+.tr .nm{display:flex;align-items:center;gap:8px;font-weight:500}
+.sw{width:9px;height:9px;border-radius:3px;flex:none}
+.bd{justify-self:start;font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px}
+.empty{padding:22px 14px;color:var(--dim)}
+.st{font-size:11.5px;color:var(--dim)}
+</style>
+</head>
+<body>
+<div class="top">
+ <h1>Eventos MT2009<span class="u">console</span></h1>
+ <div class="ctl"><div class="tz" id="tz"><button data-tz="America/Lima" class="on">Lima</button><button data-tz="Etc/GMT-3">Servidor</button></div><button class="ic" id="refresh">⟳</button></div>
+</div>
+<div class="wrap">
+ <div class="grid">
+  <aside class="panel">
+   <div class="mh"><h2 id="mlabel">…</h2><div><button id="prev">‹</button> <button id="nextm">›</button></div></div>
+   <div class="mg" id="mg"></div>
+   <div class="legend" id="legend"></div>
+  </aside>
+  <section class="panel">
+   <div class="dhead"><h2 id="dlabel">…</h2><span id="dmeta"></span><span class="live" id="dnext"></span></div>
+   <div class="thead"><span>Hora</span><span>Evento</span><span>Duración</span><span>Intensidad</span></div>
+   <div id="tbody"></div>
+  </section>
+ </div>
+</div>
+<script>
+const API='https://mt2009.uk/api/events/list';
+const TYPE={EVENT_TYPE_MOONLIGHT:['Luz de Luna','#b78bf5'],EVENT_TYPE_WHEEL_FORTUNE_EVENT:['Rueda de la Fortuna','#ef7fd0'],EVENT_TYPE_DOUBLE_METIN_LOOT_EVENT:['Doble Loot Metin','#ef6b6b'],EVENT_TYPE_DOUBLE_BOSS_LOOT_EVENT:['Doble Loot Boss','#f0913f'],EVENT_TYPE_DOUBLE_FISHING:['Pesca Doble','#3fb6e6'],EVENT_TYPE_DOUBLE_MINING:['Minería Doble','#9aa6b8'],EVENT_TYPE_EXP:['EXP','#43c96b'],EVENT_TYPE_ITEM_DROP:['Item Drop','#e0b83f'],EVENT_TYPE_YANG_DROP:['Yang Drop','#d9a520'],EVENT_TYPE_BONUS_EVENT:['Bonus','#d17ff0'],EVENT_TYPE_TANAKA:['Tanaka','#ef6d86'],EVENT_TYPE_METIN_RAIN:['Metin Rain','#4f8fe8']};
+const meta=id=>TYPE[id]?{name:TYPE[id][0],color:TYPE[id][1]}:{name:id.replace('EVENT_TYPE_','').replace(/_/g,' ').toLowerCase(),color:'#7a8496'};
+function inten(e){const id=e.eventIndex,v0=e.value0||0,v1=e.value1||0,v3=e.value3||0;
+ if(id==='EVENT_TYPE_EXP'||id==='EVENT_TYPE_ITEM_DROP'||id==='EVENT_TYPE_YANG_DROP')return v0?'+'+v0+'%':'';
+ if(id==='EVENT_TYPE_MOONLIGHT'||id==='EVENT_TYPE_WHEEL_FORTUNE_EVENT')return v3?v3+'%'+(v3>=2?' ★':''):'';
+ if(id==='EVENT_TYPE_DOUBLE_METIN_LOOT_EVENT'||id==='EVENT_TYPE_DOUBLE_BOSS_LOOT_EVENT')return v3?'+'+v3+'%':'';
+ if(id==='EVENT_TYPE_DOUBLE_FISHING'||id==='EVENT_TYPE_DOUBLE_MINING')return 'x2';
+ if(id==='EVENT_TYPE_BONUS_EVENT')return v1?'+'+v1:'';return '';}
+function off(d,tz){const p={};for(const x of new Intl.DateTimeFormat('en-US',{timeZone:tz,hour12:false,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'}).formatToParts(d))p[x.type]=x.value;return Date.UTC(+p.year,+p.month-1,+p.day,+p.hour,+p.minute,+p.second)-d.getTime();}
+function z2u(y2,tz){const[Y,M,D]=y2.split('-').map(Number);const t0=Date.UTC(Y,M-1,D,0,0,0);const o1=off(new Date(t0),tz);let c=t0-o1;const o2=off(new Date(c),tz);if(o2!==o1)c=t0-o2;return c;}
+function ymd(d,tz){return new Intl.DateTimeFormat('en-CA',{timeZone:tz,year:'numeric',month:'2-digit',day:'2-digit'}).format(d);}
+function hm(d,tz){return new Intl.DateTimeFormat('en-GB',{timeZone:tz,hour:'2-digit',minute:'2-digit',hour12:false}).format(d);}
+function addD(y2,n){const d=new Date(y2+'T00:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10);}
+function P(e){return{start:Date.parse(e.startTime),end:Date.parse(e.endTime)};}
+function dayEvents(evs,day,tz){const a=z2u(day,tz),b=z2u(addD(day,1),tz);return evs.filter(e=>e.enabled!==false&&P(e).end>a&&P(e).start<b).sort((x,y)=>P(x).start-P(y).start);}
+function group(evs,tz){const m=new Map();for(const e of evs){const s=P(e).start,en=P(e).end;const k=hm(new Date(s),tz)+'–'+hm(new Date(en),tz);if(!m.has(k))m.set(k,{slot:k,start:s,items:[]});m.get(k).items.push(e);}return[...m.values()].sort((a,b)=>a.start-b.start);}
+async function load(){const r=await fetch(API);return(await r.json()).data.filter(e=>e.enabled!==false);}
+function dur(a,b){const m=Math.round((b-a)/60000);return m>=60?Math.floor(m/60)+'h '+(m%60?m%60+'m ':''):m+'m';}
+
+const $=s=>document.querySelector(s);
+let EV=[],tz='America/Lima',sel=null,y,m;
+const types=()=>[...new Set(EV.map(e=>e.eventIndex))];
+function renderAll(){renderMonth();renderDay();$('#legend').innerHTML=types().map(id=>'<span><i style="background:'+meta(id).color+'"></i>'+meta(id).name+'</span>').join('');}
+function renderMonth(){
+ $('#mlabel').textContent=new Date(Date.UTC(y,m-1,1)).toLocaleDateString('es-PE',{month:'long',year:'numeric',timeZone:'UTC'});
+ const first=new Date(Date.UTC(y,m-1,1)),dowMon=(first.getUTCDay()+6)%7,g=$('#mg'),t=ymd(new Date(),tz);
+ g.innerHTML='<span class="dw">L</span><span class="dw">M</span><span class="dw">M</span><span class="dw">J</span><span class="dw">V</span><span class="dw">S</span><span class="dw">D</span>';
+ for(let i=0;i<42;i++){const cur=new Date(Date.UTC(y,m-1,1-dowMon+i)),key=cur.toISOString().slice(0,10);
+  const inM=key.slice(0,7)===y+'-'+String(m).padStart(2,'0');
+  const b=document.createElement('button');b.className='c'+(inM?'':' out')+(key===t?' today':'')+(key===sel?' sel':'')+(dayEvents(EV,key,tz).length?' has':'');
+  b.textContent=cur.getUTCDate();b.onclick=()=>{sel=key;renderDay();renderMonth();};g.appendChild(b);}
+}
+function renderDay(){
+ $('#dlabel').textContent=new Date(sel+'T12:00:00Z').toLocaleDateString('es-PE',{weekday:'long',day:'numeric',month:'long',timeZone:'UTC'});
+ const now=new Date(),evs=dayEvents(EV,sel,tz);
+ $('#dmeta').textContent=evs.length?evs.length+' eventos':'sin eventos';
+ const up=EV.filter(e=>P(e).start>now).sort((a,b)=>P(a).start-P(b).start)[0];
+ $('#dnext').textContent=up?('próximo '+hm(new Date(P(up).start),tz)):'';
+ const body=$('#tbody');body.innerHTML='';
+ if(!evs.length){body.innerHTML='<div class="empty">Sin eventos este día.</div>';return;}
+ for(const g of group(evs,tz)){
+  body.insertAdjacentHTML('beforeend','<div class="group">'+g.slot+'</div>');
+  for(const e of g.items){const mm=meta(e.eventIndex),bd=inten(e),st=P(e),live=now>=new Date(st.start)&&now<=new Date(st.end);
+   body.insertAdjacentHTML('beforeend','<div class="tr"><span class="hr mono">'+hm(new Date(st.start),tz)+'</span><span class="nm"><i class="sw" style="background:'+mm.color+'"></i>'+mm.name+(live?' <span style="color:var(--live);font-size:10px;font-weight:700;letter-spacing:.05em">● LIVE</span>':'')+'</span><span class="st mono">'+dur(st.start,st.end)+'</span>'+(bd?'<span class="bd" style="background:'+mm.color+'22;color:'+mm.color+'">'+bd+'</span>':'<span></span>')+'</div>');}
+ }
+}
+$('#prev').onclick=()=>{m--;if(m<1){m=12;y--;}renderMonth();};
+$('#nextm').onclick=()=>{m++;if(m>12){m=1;y++;}renderMonth();};
+$('#refresh').onclick=()=>boot();
+document.querySelectorAll('#tz button').forEach(b=>b.onclick=()=>{tz=b.dataset.tz;document.querySelectorAll('#tz button').forEach(x=>x.classList.toggle('on',x===b));renderAll();});
+async function boot(){EV=await load();const d=new Date();y=d.getFullYear();m=d.getMonth()+1;sel=sel||ymd(d,tz);renderAll();}
+boot();
+</script>
+</body>
+</html>

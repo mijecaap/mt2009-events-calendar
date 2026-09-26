@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Eventos MT2009 — Nightshift</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#08090a;--panel:#0f1011;--surf:rgba(255,255,255,.03);--line:rgba(255,255,255,.08);--line2:rgba(255,255,255,.05);--tx:#f7f8f8;--tx2:#d0d6e0;--mut:#8a8f98;--dim:#62666d;--gold:#d8b25a;--live:#10b981;--sel:#7170ff}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--bg);color:var(--tx);font:15px/1.5 Inter,system-ui,sans-serif;font-feature-settings:"cv01","ss03";-webkit-font-smoothing:antialiased}
+.mono{font-family:'JetBrains Mono',monospace;font-variant-numeric:tabular-nums}
+.wrap{max-width:1080px;margin:0 auto;padding:20px 20px 64px}
+header{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:24px;height:24px;border-radius:7px;background:linear-gradient(135deg,#d8b25a,#7c5f1f)}
+h1{font-size:15px;font-weight:590;letter-spacing:-.2px;margin:0}
+.brand small{display:block;color:var(--dim);font-size:11.5px;font-weight:400}
+.ctl{display:flex;gap:8px;align-items:center}
+.tz{display:flex;background:var(--surf);border:1px solid var(--line);border-radius:8px;padding:2px}
+.tz button{border:0;background:none;color:var(--mut);font:inherit;font-size:12.5px;padding:5px 10px;border-radius:6px;cursor:pointer}
+.tz button.on{background:rgba(255,255,255,.09);color:var(--tx)}
+.ic{width:34px;height:34px;border-radius:8px;background:var(--surf);border:1px solid var(--line);color:var(--tx2);cursor:pointer;font-size:15px}
+.band{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:20px}
+@media(max-width:640px){.band{grid-template-columns:1fr}}
+.bp{background:var(--panel);padding:14px 16px;min-height:70px}
+.bp h4{margin:0 0 7px;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);font-weight:590}
+.bp .big{font-size:16px;font-weight:590}
+.live-pill{display:inline-flex;align-items:center;gap:7px;color:var(--live);font-size:13px;font-weight:510;margin-right:14px}
+.live-pill i{width:6px;height:6px;border-radius:50%;background:var(--live);animation:p 1.6s infinite}
+@keyframes p{0%{box-shadow:0 0 0 0 rgba(16,185,129,.5)}70%{box-shadow:0 0 0 6px rgba(16,185,129,0)}100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}}
+.cols{display:grid;grid-template-columns:1fr 272px;gap:20px;align-items:start}
+@media(max-width:820px){.cols{grid-template-columns:1fr}}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:12px}
+.hd{display:flex;align-items:baseline;gap:10px;padding:15px 16px;border-bottom:1px solid var(--line2)}
+.hd h2{font-size:15px;font-weight:590;margin:0;text-transform:capitalize}
+.hd span{color:var(--dim);font-size:12px}
+.row{display:grid;grid-template-columns:100px 12px 1fr auto;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--line2)}
+.row:last-child{border-bottom:0}
+.row:hover{background:rgba(255,255,255,.02)}
+.row .t{color:var(--mut);font-size:12.5px}
+.tk{width:3px;height:22px;border-radius:2px;justify-self:center}
+.row .nm{font-size:14px;font-weight:510}
+.badge{font-size:11.5px;font-weight:500;padding:2px 8px;border-radius:6px;font-family:'JetBrains Mono',monospace}
+.slotlabel{padding:12px 16px 4px;color:var(--dim);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:590}
+.rail{padding:14px}
+.rt{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.rt h3{margin:0;font-size:12.5px;color:var(--tx2);font-weight:590;text-transform:capitalize}
+.rt button{background:none;border:1px solid var(--line);color:var(--mut);border-radius:6px;width:22px;height:22px;cursor:pointer}
+.mgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.mgrid .dw{color:var(--dim);font-size:10px;text-align:center;padding:3px 0}
+.mgrid .c{aspect-ratio:1;border:0;background:none;color:var(--tx2);font:inherit;font-size:12px;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative}
+.mgrid .c.out{color:var(--dim);opacity:.45}
+.mgrid .c.today{color:var(--gold)}
+.mgrid .c.sel{background:var(--sel);color:#fff}
+.mgrid .c.has::after{content:"";position:absolute;bottom:3px;width:3px;height:3px;border-radius:50%;background:var(--gold)}
+.legend{display:flex;flex-wrap:wrap;gap:7px 12px;padding:14px;border-top:1px solid var(--line2)}
+.legend span{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--mut)}
+.legend i{width:7px;height:7px;border-radius:2px}
+.empty{color:var(--dim);padding:26px 16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <header>
+  <div class="brand"><span class="logo"></span><h1>Eventos MT2009<small>Monitor de actividad · mt2009.uk</small></h1></div>
+  <div class="ctl"><div class="tz" id="tz"><button data-tz="America/Lima" class="on">Lima</button><button data-tz="Etc/GMT-3">Servidor</button></div><button class="ic" id="refresh">⟳</button></div>
+ </header>
+ <div class="band">
+  <div class="bp"><h4>Ahora</h4><div id="now"></div></div>
+  <div class="bp"><h4>Siguiente</h4><div class="big" id="next"></div></div>
+ </div>
+ <div class="cols">
+  <section class="card"><div class="hd"><h2 id="dlabel">…</h2><span id="dmeta"></span></div><div id="tl"></div></section>
+  <aside class="card rail">
+   <div class="rt"><h3 id="mlabel">…</h3><span><button id="prev">‹</button> <button id="nextm">›</button></span></div>
+   <div class="mgrid" id="mgrid"></div>
+   <div class="legend" id="legend"></div>
+  </aside>
+ </div>
+</div>
+<script>
+const API='https://mt2009.uk/api/events/list';
+const TYPE={EVENT_TYPE_MOONLIGHT:['Luz de Luna','#b78bf5'],EVENT_TYPE_WHEEL_FORTUNE_EVENT:['Rueda de la Fortuna','#ef7fd0'],EVENT_TYPE_DOUBLE_METIN_LOOT_EVENT:['Doble Loot Metin','#ef6b6b'],EVENT_TYPE_DOUBLE_BOSS_LOOT_EVENT:['Doble Loot Boss','#f0913f'],EVENT_TYPE_DOUBLE_FISHING:['Pesca Doble','#3fb6e6'],EVENT_TYPE_DOUBLE_MINING:['Minería Doble','#9aa6b8'],EVENT_TYPE_EXP:['EXP','#43c96b'],EVENT_TYPE_ITEM_DROP:['Item Drop','#e0b83f'],EVENT_TYPE_YANG_DROP:['Yang Drop','#d9a520'],EVENT_TYPE_BONUS_EVENT:['Bonus','#d17ff0'],EVENT_TYPE_TANAKA:['Tanaka','#ef6d86'],EVENT_TYPE_METIN_RAIN:['Metin Rain','#4f8fe8']};
+const meta=id=>TYPE[id]?{name:TYPE[id][0],color:TYPE[id][1]}:{name:id.replace('EVENT_TYPE_','').replace(/_/g,' ').toLowerCase(),color:'#7a8496'};
+function inten(e){const id=e.eventIndex,v0=e.value0||0,v1=e.value1||0,v3=e.value3||0;
+ if(id==='EVENT_TYPE_EXP'||id==='EVENT_TYPE_ITEM_DROP'||id==='EVENT_TYPE_YANG_DROP')return v0?'+'+v0+'%':'';
+ if(id==='EVENT_TYPE_MOONLIGHT'||id==='EVENT_TYPE_WHEEL_FORTUNE_EVENT')return v3?v3+'%'+(v3>=2?' ★':''):'';
+ if(id==='EVENT_TYPE_DOUBLE_METIN_LOOT_EVENT'||id==='EVENT_TYPE_DOUBLE_BOSS_LOOT_EVENT')return v3?'+'+v3+'%':'';
+ if(id==='EVENT_TYPE_DOUBLE_FISHING'||id==='EVENT_TYPE_DOUBLE_MINING')return 'x2';
+ if(id==='EVENT_TYPE_BONUS_EVENT')return v1?'+'+v1:'';return '';}
+function off(d,tz){const p={};for(const x of new Intl.DateTimeFormat('en-US',{timeZone:tz,hour12:false,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'}).formatToParts(d))p[x.type]=x.value;return Date.UTC(+p.year,+p.month-1,+p.day,+p.hour,+p.minute,+p.second)-d.getTime();}
+function z2u(y2,tz){const[Y,M,D]=y2.split('-').map(Number);const t0=Date.UTC(Y,M-1,D,0,0,0);const o1=off(new Date(t0),tz);let c=t0-o1;const o2=off(new Date(c),tz);if(o2!==o1)c=t0-o2;return c;}
+function ymd(d,tz){return new Intl.DateTimeFormat('en-CA',{timeZone:tz,year:'numeric',month:'2-digit',day:'2-digit'}).format(d);}
+function hm(d,tz){return new Intl.DateTimeFormat('en-GB',{timeZone:tz,hour:'2-digit',minute:'2-digit',hour12:false}).format(d);}
+function addD(y2,n){const d=new Date(y2+'T00:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10);}
+function P(e){return{start:Date.parse(e.startTime),end:Date.parse(e.endTime)};}
+function dayEvents(evs,day,tz){const a=z2u(day,tz),b=z2u(addD(day,1),tz);return evs.filter(e=>e.enabled!==false&&P(e).end>a&&P(e).start<b).sort((x,y)=>P(x).start-P(y).start);}
+function group(evs,tz){const m=new Map();for(const e of evs){const s=P(e).start,en=P(e).end;const k=hm(new Date(s),tz)+'–'+hm(new Date(en),tz);if(!m.has(k))m.set(k,{slot:k,start:s,items:[]});m.get(k).items.push(e);}return[...m.values()].sort((a,b)=>a.start-b.start);}
+async function load(){const r=await fetch(API);return(await r.json()).data.filter(e=>e.enabled!==false);}
+
+const $=s=>document.querySelector(s);
+let EV=[],tz='America/Lima',sel=null,y,m;
+const types=()=>[...new Set(EV.map(e=>e.eventIndex))];
+function renderAll(){renderBand();renderTL();renderMonth();$('#legend').innerHTML=types().map(id=>'<span><i style="background:'+meta(id).color+'"></i>'+meta(id).name+'</span>').join('');}
+function renderBand(){const now=new Date();
+ const live=EV.filter(e=>now>=new Date(P(e).start)&&now<=new Date(P(e).end));
+ $('#now').innerHTML=live.length?live.map(e=>'<span class="live-pill"><i></i>'+meta(e.eventIndex).name+' · hasta '+hm(new Date(P(e).end),tz)+'</span>').join(''):'<span style="color:var(--dim)">Sin eventos activos</span>';
+ const up=EV.filter(e=>P(e).start>now).sort((a,b)=>P(a).start-P(b).start)[0];
+ if(up){const mins=Math.round((P(up).start-now)/60000),when=mins<60?'en '+mins+' min':'en '+Math.floor(mins/60)+'h '+(mins%60)+'m';
+  $('#next').innerHTML=meta(up.eventIndex).name+' <span style="color:var(--mut);font-weight:400">· '+hm(new Date(P(up).start),tz)+' ('+when+')</span>';}
+ else $('#next').textContent='—';}
+function renderTL(){const now=new Date();
+ $('#dlabel').textContent=new Date(sel+'T12:00:00Z').toLocaleDateString('es-PE',{weekday:'long',day:'numeric',month:'long',timeZone:'UTC'});
+ const evs=dayEvents(EV,sel,tz);$('#dmeta').textContent=evs.length?evs.length+' eventos':'sin eventos';
+ const tl=$('#tl');tl.innerHTML='';
+ if(!evs.length){tl.innerHTML='<div class="empty">Sin eventos este día.</div>';return;}
+ for(const g of group(evs,tz)){
+  tl.insertAdjacentHTML('beforeend','<div class="slotlabel">'+g.slot+'</div>');
+  for(const e of g.items){const mm=meta(e.eventIndex),bd=inten(e),live=now>=new Date(P(e).start)&&now<=new Date(P(e).end);
+   tl.insertAdjacentHTML('beforeend','<div class="row"><span class="t mono">'+hm(new Date(P(e).start),tz)+'–'+hm(new Date(P(e).end),tz)+'</span><span class="tk" style="background:'+mm.color+'"></span><span class="nm">'+mm.name+(live?' <span class="live-pill" style="margin-left:8px"><i></i>LIVE</span>':'')+'</span>'+(bd?'<span class="badge" style="background:'+mm.color+'22;color:'+mm.color+'">'+bd+'</span>':'')+'</div>');}
+ }
+}
+function renderMonth(){
+ $('#mlabel').textContent=new Date(Date.UTC(y,m-1,1)).toLocaleDateString('es-PE',{month:'long',year:'numeric',timeZone:'UTC'});
+ const first=new Date(Date.UTC(y,m-1,1)),dowMon=(first.getUTCDay()+6)%7,g=$('#mgrid'),t=ymd(new Date(),tz);
+ g.innerHTML='<span class="dw">L</span><span class="dw">M</span><span class="dw">M</span><span class="dw">J</span><span class="dw">V</span><span class="dw">S</span><span class="dw">D</span>';
+ for(let i=0;i<42;i++){const cur=new Date(Date.UTC(y,m-1,1-dowMon+i)),key=cur.toISOString().slice(0,10);
+  const inM=key.slice(0,7)===y+'-'+String(m).padStart(2,'0');
+  const has=dayEvents(EV,key,tz).length>0;
+  const b=document.createElement('button');b.className='c'+(inM?'':' out')+(key===t?' today':'')+(key===sel?' sel':'')+(has?' has':'');
+  b.textContent=cur.getUTCDate();b.onclick=()=>{sel=key;renderTL();renderMonth();};g.appendChild(b);}
+}
+$('#prev').onclick=()=>{m--;if(m<1){m=12;y--;}renderMonth();};
+$('#nextm').onclick=()=>{m++;if(m>12){m=1;y++;}renderMonth();};
+$('#refresh').onclick=()=>boot();
+document.querySelectorAll('#tz button').forEach(b=>b.onclick=()=>{tz=b.dataset.tz;document.querySelectorAll('#tz button').forEach(x=>x.classList.toggle('on',x===b));renderAll();});
+async function boot(){EV=await load();const d=new Date();y=d.getFullYear();m=d.getMonth()+1;sel=sel||ymd(d,tz);renderAll();}
+boot();
+</script>
+</body>
+</html>
