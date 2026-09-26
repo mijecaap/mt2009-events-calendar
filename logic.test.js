@@ -29,9 +29,9 @@ test("intensity: Bonus usa value1", () => {
 test("meta: nombre desconocido se humaniza", () => {
   assert.equal(meta("EVENT_TYPE_NEW_THING").name, "new thing");
 });
-test("isHighlight: lluvia de metines y doble pesca cuentan", () => {
-  assert.equal(isHighlight({ eventIndex: "EVENT_TYPE_METIN_RAIN" }), true);
+test("isHighlight: doble pesca cuenta, lluvia de metines NO", () => {
   assert.equal(isHighlight({ eventIndex: "EVENT_TYPE_DOUBLE_FISHING" }), true);
+  assert.equal(isHighlight({ eventIndex: "EVENT_TYPE_METIN_RAIN" }), false);
 });
 test("isHighlight: Luna/Ruleta solo con value3>=2", () => {
   assert.equal(isHighlight({ eventIndex: "EVENT_TYPE_MOONLIGHT", value3: 2 }), true);

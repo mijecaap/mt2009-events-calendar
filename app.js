@@ -1,7 +1,7 @@
 import {
   API_URL, LIMA, meta, intensity, isHighlight,
   ymdInTZ, hmInTZ, eventsForDay, groupByDay, isLive, nextEvent, monthMatrix,
-} from "./logic.js?v=6";
+} from "./logic.js?v=7";
 
 const $ = (s) => document.querySelector(s);
 
