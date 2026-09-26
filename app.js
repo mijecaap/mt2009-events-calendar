@@ -1,13 +1,22 @@
 import {
-  API_URL, LIMA, ARG, meta, intensity,
+  API_URL, LIMA, meta, intensity, isHighlight,
   ymdInTZ, hmInTZ, eventsForDay, groupByDay, isLive, nextEvent, monthMatrix,
-} from "./logic.js?v=5";
+} from "./logic.js?v=6";
 
 const $ = (s) => document.querySelector(s);
-let EV = [], tz = LIMA, sel = null, y, m;
 
-// Intenta el proxy same-origin (/api, evita CORS y bloqueos de WebView) y si no,
-// cae directo al API. Así funciona en cualquier navegador y en local.
+// Zona horaria detectada automáticamente del dispositivo del visitante.
+function detectTZ() {
+  try { return Intl.DateTimeFormat().resolvedOptions().timeZone || LIMA; }
+  catch { return LIMA; }
+}
+function tzName(z) {
+  try { return z.split("/").pop().replace(/_/g, " "); } catch { return z; }
+}
+
+let EV = [], tz = detectTZ(), sel = null, y, m;
+
+// Proxy same-origin (/api, evita CORS/bloqueos de WebView); si falla, directo al API.
 async function fetchEvents() {
   let lastErr;
   for (const url of ["/api/events/list", API_URL]) {
@@ -37,6 +46,7 @@ async function boot() {
 }
 
 function renderAll() {
+  $("#tzname").textContent = tzName(tz);
   renderCal();
   renderDay();
   $("#foot").textContent = "Fuente mt2009.uk · actualizado " + hmInTZ(new Date(), tz);
@@ -51,10 +61,17 @@ function renderCal() {
   for (const week of monthMatrix(y, m)) {
     for (const key of week) {
       const inM = key.slice(0, 7) === `${y}-${String(m).padStart(2, "0")}`;
-      const types = [...new Set(eventsForDay(EV, key, tz).map(e => e.eventIndex))].slice(0, 4);
+      const dayEvents = eventsForDay(EV, key, tz);
+      const types = [...new Set(dayEvents.map(e => e.eventIndex))].slice(0, 4);
+      const highlights = dayEvents.filter(isHighlight);
       const b = document.createElement("button");
       b.className = "cell" + (inM ? "" : " out") + (key === today ? " today" : "") + (key === sel ? " sel" : "");
-      b.innerHTML = `<span>${+key.slice(-2)}</span>` +
+      if (highlights.length) {
+        b.title = "★ " + [...new Set(highlights.map(e => meta(e.eventIndex).name))].join(", ");
+      }
+      b.innerHTML =
+        (highlights.length ? '<span class="star">★</span>' : "") +
+        `<span>${+key.slice(-2)}</span>` +
         `<span class="dots">${types.map(id => `<i style="background:${meta(id).color}"></i>`).join("")}</span>`;
       b.onclick = () => { sel = key; renderCal(); renderDay(); };
       cal.appendChild(b);
@@ -79,12 +96,12 @@ function renderDay() {
   for (const g of groupByDay(evs, tz)) {
     list.insertAdjacentHTML("beforeend", `<div class="slot">${g.slot}</div>`);
     for (const e of g.items) {
-      const mm = meta(e.eventIndex), bd = intensity(e), live = isLive(e, now);
+      const mm = meta(e.eventIndex), bd = intensity(e), live = isLive(e, now), hl = isHighlight(e);
       list.insertAdjacentHTML("beforeend",
         `<div class="ev">
            <span class="t">${hmInTZ(new Date(Date.parse(e.startTime)), tz)}–${hmInTZ(new Date(Date.parse(e.endTime)), tz)}</span>
            <span class="bar" style="background:${mm.color}"></span>
-           <span class="nm">${mm.name}${live ? ' <span class="live">• en vivo</span>' : ""}</span>
+           <span class="nm">${hl ? '<span class="hstar">★</span> ' : ""}${mm.name}${live ? ' <span class="live">• en vivo</span>' : ""}</span>
            ${bd ? `<span class="badge" style="background:${mm.color}1f;color:${mm.color}">${bd}</span>` : ""}
          </div>`);
     }
@@ -93,12 +110,5 @@ function renderDay() {
 
 $("#prev").onclick = () => { m--; if (m < 1) { m = 12; y--; } renderCal(); };
 $("#nextm").onclick = () => { m++; if (m > 12) { m = 1; y++; } renderCal(); };
-document.querySelectorAll("#tz button").forEach(btn => {
-  btn.onclick = () => {
-    tz = btn.dataset.tz;
-    document.querySelectorAll("#tz button").forEach(x => x.classList.toggle("on", x === btn));
-    renderAll();
-  };
-});
 
 boot();

@@ -1,5 +1,5 @@
 /* Ledger — light editorial calendar */
-:root{--bg:#f7f6f1;--panel:#fff;--ink:#191817;--mut:#716f68;--line:#e6e4dc;--sel:#191817;--live:#2f8f5b}
+:root{--bg:#f7f6f1;--panel:#fff;--ink:#191817;--mut:#716f68;--line:#e6e4dc;--sel:#191817;--live:#2f8f5b;--gold:#c8963e}
 *{box-sizing:border-box}
 html,body{margin:0}
 body{background:var(--bg);color:var(--ink);
@@ -10,9 +10,8 @@ body{background:var(--bg);color:var(--ink);
 header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-bottom:16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
 h1{font-family:Newsreader,Georgia,serif;font-weight:500;font-size:26px;letter-spacing:-.3px;margin:0}
 h1 span{color:var(--mut);font-size:14px;font-family:Inter;font-weight:400;margin-left:8px}
-.tz{display:flex;gap:2px;background:#efece4;border:1px solid var(--line);border-radius:8px;padding:2px}
-.tz button{border:0;background:none;font:inherit;font-size:12.5px;color:var(--mut);padding:6px 12px;border-radius:6px;cursor:pointer;min-height:30px}
-.tz button.on{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.07)}
+.tzx{font-size:12.5px;color:var(--mut)}
+.tzx b{color:var(--ink);font-weight:600}
 .grid{display:grid;grid-template-columns:224px 1fr;gap:36px;margin-top:26px}
 @media(max-width:720px){.grid{grid-template-columns:1fr;gap:22px}}
 .mhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
@@ -21,13 +20,17 @@ h1 span{color:var(--mut);font-size:14px;font-family:Inter;font-weight:400;margin
 .mnav button:hover{border-color:var(--ink);color:var(--ink)}
 .dow,.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
 .dow span{text-align:center;font-size:10.5px;color:var(--mut);font-weight:500;padding:4px 0}
-.cell{aspect-ratio:1;border:0;background:none;border-radius:7px;cursor:pointer;color:var(--ink);font:inherit;font-size:12.5px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+.cell{aspect-ratio:1;border:0;background:none;border-radius:7px;cursor:pointer;color:var(--ink);font:inherit;font-size:12.5px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;position:relative}
 .cell.out{color:#c8c6bd}
 .cell:hover{background:#efece4}
 .cell.today{font-weight:700}
 .cell.sel{background:var(--sel);color:#fff}
+.cell .star{position:absolute;top:3px;right:4px;font-size:9px;line-height:1;color:var(--gold)}
+.cell.sel .star{color:#f0c869}
 .dots{display:flex;gap:2px;height:5px}
 .dots i{width:4px;height:4px;border-radius:50%}
+.cal-legend{display:flex;gap:6px;margin-top:12px;font-size:11px;color:var(--mut);line-height:1.4}
+.cal-legend .s{color:var(--gold)}
 .dayhead{display:flex;align-items:baseline;gap:10px;margin-bottom:4px}
 .dayhead h2{font-family:Newsreader,Georgia,serif;font-weight:500;font-size:22px;margin:0;text-transform:capitalize}
 .dayhead .meta{color:var(--mut);font-size:13px}
@@ -41,5 +44,6 @@ h1 span{color:var(--mut);font-size:14px;font-family:Inter;font-weight:400;margin
 .nm{font-weight:500;flex:1;min-width:0}
 .badge{font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-variant-numeric:tabular-nums}
 .live{font-size:10px;font-weight:700;letter-spacing:.07em;color:var(--live);text-transform:uppercase}
+.hstar{color:var(--gold);font-size:11px}
 .empty{color:var(--mut);padding:22px 0}
 .foot{margin-top:44px;color:var(--mut);font-size:12px}

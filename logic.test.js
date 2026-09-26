@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import {
-  intensity, meta, ymdInTZ, hmInTZ, zonedToUtc,
+  intensity, meta, isHighlight, ymdInTZ, hmInTZ, zonedToUtc,
   eventsForDay, groupByDay, isLive, nextEvent, monthMatrix, LIMA, ARG,
 } from "./logic.js";
 
@@ -28,6 +28,20 @@ test("intensity: Bonus usa value1", () => {
 });
 test("meta: nombre desconocido se humaniza", () => {
   assert.equal(meta("EVENT_TYPE_NEW_THING").name, "new thing");
+});
+test("isHighlight: lluvia de metines y doble pesca cuentan", () => {
+  assert.equal(isHighlight({ eventIndex: "EVENT_TYPE_METIN_RAIN" }), true);
+  assert.equal(isHighlight({ eventIndex: "EVENT_TYPE_DOUBLE_FISHING" }), true);
+});
+test("isHighlight: Luna/Ruleta solo con value3>=2", () => {
+  assert.equal(isHighlight({ eventIndex: "EVENT_TYPE_MOONLIGHT", value3: 2 }), true);
+  assert.equal(isHighlight({ eventIndex: "EVENT_TYPE_MOONLIGHT", value3: 1 }), false);
+  assert.equal(isHighlight({ eventIndex: "EVENT_TYPE_WHEEL_FORTUNE_EVENT", value3: 2 }), true);
+  assert.equal(isHighlight({ eventIndex: "EVENT_TYPE_WHEEL_FORTUNE_EVENT", value3: 1 }), false);
+});
+test("isHighlight: otros eventos no cuentan", () => {
+  assert.equal(isHighlight({ eventIndex: "EVENT_TYPE_EXP", value0: 80 }), false);
+  assert.equal(isHighlight({ eventIndex: "EVENT_TYPE_DOUBLE_MINING", value0: 100 }), false);
 });
 test("ymdInTZ: 03:00Z es 25/09 en Lima y 26/09 en Argentina", () => {
   const d = new Date("2026-09-26T03:00:00.000Z");

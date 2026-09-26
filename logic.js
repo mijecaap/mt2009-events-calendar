@@ -40,6 +40,15 @@ export function intensity(e) {
   return "";
 }
 
+// Días "destacados" que se marcan con ★ en el calendario:
+// lluvia de metines, doble pesca, y Luz de Luna / Ruleta al 2% o más.
+export function isHighlight(e) {
+  const id = e.eventIndex;
+  if (id === "EVENT_TYPE_METIN_RAIN" || id === "EVENT_TYPE_DOUBLE_FISHING") return true;
+  if ((id === "EVENT_TYPE_MOONLIGHT" || id === "EVENT_TYPE_WHEEL_FORTUNE_EVENT") && (e.value3 || 0) >= 2) return true;
+  return false;
+}
+
 // --- zona horaria (sin librerías) ---
 function offsetMs(date, tz) {
   const p = {};
