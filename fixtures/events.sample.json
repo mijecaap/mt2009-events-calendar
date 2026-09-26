@@ -1,0 +1,11 @@
+{
+  "data": [
+    {"id": 1, "eventIndex": "EVENT_TYPE_MOONLIGHT", "startTime": "2026-09-26T01:00:00.000Z", "endTime": "2026-09-26T03:29:59.000Z", "value0": 0, "value1": 0, "value2": 0, "value3": 1, "enabled": true, "empireFlag": 0, "channelFlag": 0},
+    {"id": 2, "eventIndex": "EVENT_TYPE_WHEEL_FORTUNE_EVENT", "startTime": "2026-09-26T10:00:00.000Z", "endTime": "2026-09-26T12:29:59.000Z", "value0": 0, "value1": 0, "value2": 0, "value3": 1, "enabled": true, "empireFlag": 0, "channelFlag": 0},
+    {"id": 3, "eventIndex": "EVENT_TYPE_WHEEL_FORTUNE_EVENT", "startTime": "2026-09-27T16:00:00.000Z", "endTime": "2026-09-27T18:29:59.000Z", "value0": 0, "value1": 0, "value2": 0, "value3": 2, "enabled": true, "empireFlag": 0, "channelFlag": 0},
+    {"id": 4, "eventIndex": "EVENT_TYPE_EXP", "startTime": "2026-09-26T04:00:00.000Z", "endTime": "2026-09-26T06:29:59.000Z", "value0": 80, "value1": 0, "value2": 0, "value3": 0, "enabled": true, "empireFlag": 0, "channelFlag": 0},
+    {"id": 5, "eventIndex": "EVENT_TYPE_DOUBLE_FISHING", "startTime": "2026-09-26T13:00:00.000Z", "endTime": "2026-09-26T15:29:59.000Z", "value0": 100, "value1": 0, "value2": 0, "value3": 0, "enabled": true, "empireFlag": 0, "channelFlag": 0},
+    {"id": 6, "eventIndex": "EVENT_TYPE_MOONLIGHT", "startTime": "2026-09-26T23:00:00.000Z", "endTime": "2026-09-27T02:59:59.000Z", "value0": 0, "value1": 0, "value2": 0, "value3": 1, "enabled": true, "empireFlag": 0, "channelFlag": 0},
+    {"id": 7, "eventIndex": "EVENT_TYPE_TANAKA", "startTime": "2026-09-26T01:00:00.000Z", "endTime": "2026-09-26T02:29:59.000Z", "value0": 0, "value1": 0, "value2": 0, "value3": 0, "enabled": false, "empireFlag": 0, "channelFlag": 0}
+  ]
+}

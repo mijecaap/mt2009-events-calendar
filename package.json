@@ -1,0 +1,6 @@
+{
+  "name": "mt2009-events-calendar",
+  "private": true,
+  "type": "module",
+  "scripts": { "test": "node --test" }
+}
