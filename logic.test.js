@@ -20,6 +20,9 @@ test("intensity: Rueda 2% lleva estrella (NO 3%)", () => {
 test("intensity: Pesca doble = x2", () => {
   assert.equal(intensity({ eventIndex: "EVENT_TYPE_DOUBLE_FISHING", value0: 100 }), "x2");
 });
+test("intensity: Doble Loot usa value3 con + y SIN estrella", () => {
+  assert.equal(intensity({ eventIndex: "EVENT_TYPE_DOUBLE_METIN_LOOT_EVENT", value3: 40 }), "+40%");
+});
 test("intensity: Bonus usa value1", () => {
   assert.equal(intensity({ eventIndex: "EVENT_TYPE_BONUS_EVENT", value1: 1500 }), "+1500");
 });

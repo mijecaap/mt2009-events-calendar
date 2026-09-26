@@ -7,8 +7,8 @@ export const SERVER = "Etc/GMT-3";    // UTC+3 (en Etc/GMT el signo va invertido
 export const EVENT_META = {
   EVENT_TYPE_MOONLIGHT:               { name: "Cajas Luz de Luna",  icon: "🌙", color: "#a78bfa", kind: "pct_v3" },
   EVENT_TYPE_WHEEL_FORTUNE_EVENT:     { name: "Rueda de la Fortuna", icon: "🎡", color: "#f472b6", kind: "pct_v3" },
-  EVENT_TYPE_DOUBLE_METIN_LOOT_EVENT: { name: "Doble Loot Metin",    icon: "⚔️", color: "#f87171", kind: "pct_v3" },
-  EVENT_TYPE_DOUBLE_BOSS_LOOT_EVENT:  { name: "Doble Loot Boss",     icon: "👹", color: "#fb923c", kind: "pct_v3" },
+  EVENT_TYPE_DOUBLE_METIN_LOOT_EVENT: { name: "Doble Loot Metin",    icon: "⚔️", color: "#f87171", kind: "pct_v3_plus" },
+  EVENT_TYPE_DOUBLE_BOSS_LOOT_EVENT:  { name: "Doble Loot Boss",     icon: "👹", color: "#fb923c", kind: "pct_v3_plus" },
   EVENT_TYPE_DOUBLE_FISHING:          { name: "Pesca Doble",         icon: "🎣", color: "#38bdf8", kind: "double" },
   EVENT_TYPE_DOUBLE_MINING:           { name: "Minería Doble",       icon: "⛏️", color: "#cbd5e1", kind: "double" },
   EVENT_TYPE_EXP:                     { name: "EXP",                 icon: "📈", color: "#4ade80", kind: "pct_v0" },
@@ -31,6 +31,7 @@ export function intensity(e) {
   const v0 = e.value0 || 0, v1 = e.value1 || 0, v3 = e.value3 || 0;
   if (m.kind === "pct_v0" && v0) return `+${v0}%`;
   if (m.kind === "pct_v3" && v3) return `${v3}%${v3 >= 2 ? " ⭐" : ""}`;
+  if (m.kind === "pct_v3_plus" && v3) return `+${v3}%`;
   if (m.kind === "double") return "x2";
   if (m.kind === "bonus" && v1) return `+${v1}`;
   return "";
