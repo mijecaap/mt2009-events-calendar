@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import {
   intensity, meta, ymdInTZ, hmInTZ, zonedToUtc,
-  eventsForDay, groupByDay, isLive, nextEvent, monthMatrix, LIMA, SERVER,
+  eventsForDay, groupByDay, isLive, nextEvent, monthMatrix, LIMA, ARG,
 } from "./logic.js";
 
 const FIX = JSON.parse(readFileSync(new URL("./fixtures/events.sample.json", import.meta.url))).data;
@@ -15,7 +15,7 @@ test("intensity: Rueda 1% sin estrella", () => {
   assert.equal(intensity({ eventIndex: "EVENT_TYPE_WHEEL_FORTUNE_EVENT", value3: 1 }), "1%");
 });
 test("intensity: Rueda 2% lleva estrella (NO 3%)", () => {
-  assert.equal(intensity({ eventIndex: "EVENT_TYPE_WHEEL_FORTUNE_EVENT", value3: 2 }), "2% ⭐");
+  assert.equal(intensity({ eventIndex: "EVENT_TYPE_WHEEL_FORTUNE_EVENT", value3: 2 }), "2% ★");
 });
 test("intensity: Pesca doble = x2", () => {
   assert.equal(intensity({ eventIndex: "EVENT_TYPE_DOUBLE_FISHING", value0: 100 }), "x2");
@@ -29,18 +29,19 @@ test("intensity: Bonus usa value1", () => {
 test("meta: nombre desconocido se humaniza", () => {
   assert.equal(meta("EVENT_TYPE_NEW_THING").name, "new thing");
 });
-test("ymdInTZ: 2026-09-26T01:00Z es 25/09 en Lima y 26/09 en servidor", () => {
-  const d = new Date("2026-09-26T01:00:00.000Z");
+test("ymdInTZ: 03:00Z es 25/09 en Lima y 26/09 en Argentina", () => {
+  const d = new Date("2026-09-26T03:00:00.000Z");
   assert.equal(ymdInTZ(d, LIMA), "2026-09-25");
-  assert.equal(ymdInTZ(d, SERVER), "2026-09-26");
+  assert.equal(ymdInTZ(d, ARG), "2026-09-26");
 });
-test("hmInTZ: 11:00Z = 06:00 Lima y 14:00 servidor", () => {
+test("hmInTZ: 11:00Z = 06:00 Lima y 08:00 Argentina", () => {
   const d = new Date("2026-09-26T11:00:00.000Z");
   assert.equal(hmInTZ(d, LIMA), "06:00");
-  assert.equal(hmInTZ(d, SERVER), "14:00");
+  assert.equal(hmInTZ(d, ARG), "08:00");
 });
-test("zonedToUtc: medianoche Lima = 05:00Z", () => {
+test("zonedToUtc: medianoche Lima = 05:00Z y Argentina = 03:00Z", () => {
   assert.equal(new Date(zonedToUtc("2026-09-26", LIMA)).toISOString(), "2026-09-26T05:00:00.000Z");
+  assert.equal(new Date(zonedToUtc("2026-09-26", ARG)).toISOString(), "2026-09-26T03:00:00.000Z");
 });
 test("eventsForDay: incluye solape de medianoche y excluye deshabilitados", () => {
   const evs = eventsForDay(FIX, "2026-09-26", LIMA);
