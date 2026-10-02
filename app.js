@@ -1,7 +1,7 @@
 import {
   API_URL, LIMA, meta, intensity, isHighlight,
   ymdInTZ, hmInTZ, eventsForDay, groupByDay, isLive, nextEvent, monthMatrix,
-} from "./logic.js?v=8";
+} from "./logic.js?v=9";
 
 const $ = (s) => document.querySelector(s);
 
@@ -109,7 +109,7 @@ function renderDay() {
         `<div class="ev">
            <span class="bar" style="background:${mm.color}"></span>
            <span class="nm">${hl ? '<span class="hstar">★</span> ' : ""}${mm.name}${live ? ' <span class="live">• en vivo</span>' : ""}</span>
-           ${bd ? `<span class="badge" style="background:${mm.color}2e;color:#191817;border:1px solid ${mm.color}66">${bd}</span>` : ""}
+           ${bd ? `<span class="badge" style="background:${mm.color}2e;color:var(--ink);border:1px solid ${mm.color}66">${bd}</span>` : ""}
          </div>`);
     }
   }
@@ -117,5 +117,20 @@ function renderDay() {
 
 $("#prev").onclick = () => { m--; if (m < 1) { m = 12; y--; } renderCal(); };
 $("#nextm").onclick = () => { m++; if (m > 12) { m = 1; y++; } renderCal(); };
+
+// Tema claro/oscuro: preferencia guardada > sistema. El atributo data-theme ya lo
+// fija un script inline en <head> (sin flash); aquí solo sincronizamos y manejamos el toggle.
+const THEME_KEY = "mtevents-theme";
+function setTheme(t) {
+  document.documentElement.setAttribute("data-theme", t);
+  const m = document.querySelector('meta[name="theme-color"]');
+  if (m) m.content = t === "dark" ? "#141310" : "#f7f6f1";
+}
+$("#theme").onclick = () => {
+  const nt = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+  try { localStorage.setItem(THEME_KEY, nt); } catch (e) {}
+  setTheme(nt);
+};
+setTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light");
 
 boot();
